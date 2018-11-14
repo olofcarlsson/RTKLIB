@@ -1146,7 +1146,8 @@ static void closetcpsvr(tcpsvr_t *tcpsvr)
 static void updatetcpsvr(tcpsvr_t *tcpsvr, char *msg)
 {
     char saddr[256]="";
-    int i,n=0;
+	char tmp[1024]="";
+    int i,j=0,n=0;
     
     tracet(4,"updatetcpsvr: state=%d\n",tcpsvr->svr.state);
     
@@ -1154,16 +1155,23 @@ static void updatetcpsvr(tcpsvr_t *tcpsvr, char *msg)
     
     for (i=0;i<MAXCLI;i++) {
         if (!tcpsvr->cli[i].state) continue;
-        strcpy(saddr,tcpsvr->cli[i].saddr);
+        /*strcpy(saddr,tcpsvr->cli[i].saddr);*/
+		strcat(tmp+j, tcpsvr->cli[i].saddr); /*first time dest points to starting address */
+        strcat(tmp, ", ");
+        j = strlen(tmp);/* next time put data at dest+j location */
         n++;
     }
+	tmp[j-2]='\0';
+	
     if (n==0) {
         tcpsvr->svr.state=1;
         sprintf(msg,"waiting...");
         return;
     }
     tcpsvr->svr.state=2;
-    if (n==1) sprintf(msg,"%s",saddr); else sprintf(msg,"%d clients",n);
+    /*if (n==1) sprintf(msg,"%s",saddr); else sprintf(msg,"%d clients",n);*/
+	sprintf(msg,"%s",tmp);
+	
 }
 /* accept client connection --------------------------------------------------*/
 static int accsock(tcpsvr_t *tcpsvr, char *msg)
