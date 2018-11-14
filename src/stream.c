@@ -1150,7 +1150,7 @@ static void updatetcpsvr(tcpsvr_t *tcpsvr, char *msg)
     int i,j=0,n=0;
     
     tracet(4,"updatetcpsvr: state=%d\n",tcpsvr->svr.state);
-    
+	
     if (tcpsvr->svr.state==0) return;
     
     for (i=0;i<MAXCLI;i++) {
