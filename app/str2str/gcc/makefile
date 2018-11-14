@@ -4,8 +4,8 @@ BINDIR = /usr/local/bin
 SRC    = ../../../src
 
 # for beagleboard
-#CTARGET= -mfpu=neon -mfloat-abi=softfp -ffast-math
-CTARGET=
+CTARGET= -mfpu=neon -mfloat-abi=hard -ffast-math
+#CTARGET=
 
 #OPTION = -DENAGLO -DENAGAL -DENAQZS -DENACMP -DENAIRN -DTRACE -DNFREQ=4 -DNEXOBS=3
 OPTION = -DENAGLO -DENAGAL -DENAQZS -DENACMP -DENAIRN -DTRACE -DNFREQ=4 -DNEXOBS=3 -DSVR_REUSEADDR
