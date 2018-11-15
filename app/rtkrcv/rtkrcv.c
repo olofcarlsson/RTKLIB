@@ -308,9 +308,12 @@ static int confwrite(vt_t *vt, const char *file)
     if ((p=strstr(buff,"::"))) *p='\0'; /* omit options in path */
     if (!vt->state||!(fp=fopen(buff,"r"))) return 1; /* no existing file */
     fclose(fp);
+	/*
     vt_printf(vt,"overwrite %-16s ? (y/n): ",buff);
     if (!vt_gets(vt,buff,sizeof(buff))||vt->brk) return 0;
     return toupper((int)buff[0])=='Y';
+	*/
+	return 1;
 }
 /* login ---------------------------------------------------------------------*/
 static int login(vt_t *vt)
@@ -420,9 +423,11 @@ static int startsvr(vt_t *vt)
         else cmds_periodic[i]=s2[i];
     }
     /* confirm overwrite */
+	/*
     for (i=3;i<8;i++) {
         if (strtype[i]==STR_FILE&&!confwrite(vt,strpath[i])) return 0;
     }
+	*/
     if (prcopt.refpos==4) { /* rtcm */
         for (i=0;i<3;i++) prcopt.rb[i]=0.0;
     }
@@ -1348,6 +1353,7 @@ static void *con_thread(void *arg)
     };
     con_t *con=(con_t *)arg;
     int i,j,narg;
+	static int autostart = 1;
     char buff[MAXCMD],*args[MAXARG],*p;
     
     trace(3,"console_thread:\n");
@@ -1365,6 +1371,11 @@ static void *con_thread(void *arg)
         /* output prompt */
         if (!vt_puts(con->vt,CMDPROMPT)) break;
         
+        if (autostart)
+        {
+            autostart = 0;
+            cmd_start(args, narg, con->vt);
+        }
         /* input command */
         if (!vt_gets(con->vt,buff,sizeof(buff))) break;
         
